@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.docker.hackathon</groupId>
+	<artifactId>docker_app2</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.2-1</version>
+	<name>docker_app2</name>
+
+        <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	    <jolokia.version>0.12.0</jolokia.version>
+        </properties>
+
+        <build>
+          <plugins>
+      <plugin>
+        <groupId>org.jolokia</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${jolokia.version}</version>
+        <configuration>
+	  <dockerHost>tcp://localhost:2375</dockerHost>
+          <logDate>default</logDate>
+          <verbose>true</verbose>
+          <images>
+            <image>
+              <name>${project.artifactId}:${project.version}</name>
+              <build>
+	        <from>docker_tomcat:7.0.62</from>
+	        <maintainer>ramesh.thummala@gmail.com</maintainer>
+		<cmd><shell>sh -x /opt/dochack/tomcat/bin/container-start.sh</shell></cmd>
+                <assembly>
+                  <mode>dir</mode>
+		  <basedir>/</basedir>
+                  <descriptor>${project.artifactId}-assembly.xml</descriptor>
+                </assembly>
+              </build>
+            </image>
+          </images>
+        </configuration>
+        <executions>
+          <execution>
+            <id>build</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+          </plugins>
+        </build>
+	<dependencies>
+          <dependency>
+            <groupId>org.docker.hackathon</groupId>
+            <artifactId>app2</artifactId>
+            <type>war</type>
+            <version>1.0.2-1</version>
+          </dependency>
+	</dependencies>
+
+</project>
